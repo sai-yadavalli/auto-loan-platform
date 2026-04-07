@@ -1,0 +1,11 @@
+.env
+.mcp.json
+.DS_Store
+node_modules/
+
+# auto-loan-ui secrets & build artifacts
+auto-loan-ui/.env
+auto-loan-ui/.env.local
+auto-loan-ui/.env.production
+auto-loan-ui/node_modules/
+auto-loan-ui/dist/
