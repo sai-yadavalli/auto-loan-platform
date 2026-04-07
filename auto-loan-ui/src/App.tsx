@@ -1,5 +1,9 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate, Link } from 'react-router-dom'
+import { Authenticator } from '@aws-amplify/ui-react'
 import { Car, Shield, Clock, ChevronRight, CheckCircle } from 'lucide-react'
+import { ProtectedRoute } from '@/components/ProtectedRoute'
+import { Navbar } from '@/components/Navbar'
+import { LoginPage } from '@/pages/LoginPage'
 
 function HomePage() {
   return (
@@ -13,12 +17,12 @@ function HomePage() {
             </div>
             <span className="font-bold text-gray-900 text-lg tracking-tight">AutoLoan</span>
           </div>
-          <a
-            href="/apply"
+          <Link
+            to="/apply/step-1"
             className="bg-primary-600 text-white text-sm font-semibold px-5 py-2.5 rounded-lg hover:bg-primary-700 transition-colors duration-150 shadow-sm"
           >
             Apply Now
-          </a>
+          </Link>
         </div>
       </nav>
 
@@ -36,13 +40,13 @@ function HomePage() {
             Apply online in minutes. Upload your documents, review your terms,
             and get a decision — all without leaving home.
           </p>
-          <a
-            href="/apply"
+          <Link
+            to="/apply/step-1"
             className="inline-flex items-center gap-2.5 bg-white text-primary-700 font-bold px-8 py-4 rounded-xl shadow-2xl hover:bg-primary-50 active:scale-95 transition-all duration-150 text-lg"
           >
             Start Your Application
             <ChevronRight className="w-5 h-5" />
-          </a>
+          </Link>
           <p className="mt-5 text-primary-300 text-sm">No hard credit pull to apply</p>
         </div>
       </section>
@@ -122,13 +126,13 @@ function HomePage() {
           <p className="text-primary-100 mb-8 text-lg">
             Join thousands of borrowers who've secured their vehicle financing online.
           </p>
-          <a
-            href="/apply"
+          <Link
+            to="/apply/step-1"
             className="inline-flex items-center gap-2 bg-white text-primary-700 font-bold px-8 py-4 rounded-xl hover:bg-primary-50 transition-colors duration-150 text-lg shadow-xl"
           >
             Apply Now — It&apos;s Free
             <ChevronRight className="w-5 h-5" />
-          </a>
+          </Link>
         </div>
       </section>
 
@@ -150,13 +154,40 @@ function HomePage() {
   )
 }
 
+// Placeholder shown on /apply/* until Stage 3 adds the real form steps
+function ApplyPlaceholder() {
+  return (
+    <div className="min-h-screen flex flex-col bg-gray-50">
+      <Navbar />
+      <main className="flex-1 flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-gray-500 text-lg">Application form coming in Stage 3.</p>
+        </div>
+      </main>
+    </div>
+  )
+}
+
 export default function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
-    </BrowserRouter>
+    // Authenticator.Provider makes useAuthenticator available throughout the entire tree,
+    // including ProtectedRoute and Navbar (which live outside <Authenticator>)
+    <Authenticator.Provider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route
+            path="/apply/*"
+            element={
+              <ProtectedRoute>
+                <ApplyPlaceholder />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </BrowserRouter>
+    </Authenticator.Provider>
   )
 }
