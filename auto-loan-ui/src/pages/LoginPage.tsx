@@ -26,7 +26,6 @@ const amplifyTheme: Theme = {
         router: {
           borderWidth: { value: '0' },
           boxShadow: { value: '0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1)' },
-          borderRadius: { value: '1rem' },
         },
       },
     },
@@ -67,7 +66,9 @@ export function LoginPage() {
             </p>
           </div>
 
-          <Authenticator>
+          <Authenticator
+            signUpAttributes={['given_name', 'family_name']}
+          >
             <AuthRedirect />
           </Authenticator>
         </div>
