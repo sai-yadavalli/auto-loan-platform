@@ -2,8 +2,14 @@ import { BrowserRouter, Routes, Route, Navigate, Link } from 'react-router-dom'
 import { Authenticator } from '@aws-amplify/ui-react'
 import { Car, Shield, Clock, ChevronRight, CheckCircle } from 'lucide-react'
 import { ProtectedRoute } from '@/components/ProtectedRoute'
-import { Navbar } from '@/components/Navbar'
 import { LoginPage } from '@/pages/LoginPage'
+import { FormProvider } from '@/context/FormContext'
+import ApplyPage from '@/pages/ApplyPage'
+import Step1Page from '@/pages/steps/Step1Page'
+import Step2Page from '@/pages/steps/Step2Page'
+import Step3Page from '@/pages/steps/Step3Page'
+import Step4Page from '@/pages/steps/Step4Page'
+import Step5Page from '@/pages/steps/Step5Page'
 
 function HomePage() {
   return (
@@ -154,20 +160,6 @@ function HomePage() {
   )
 }
 
-// Placeholder shown on /apply/* until Stage 3 adds the real form steps
-function ApplyPlaceholder() {
-  return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
-      <Navbar />
-      <main className="flex-1 flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-gray-500 text-lg">Application form coming in Stage 3.</p>
-        </div>
-      </main>
-    </div>
-  )
-}
-
 export default function App() {
   return (
     // Authenticator.Provider makes useAuthenticator available throughout the entire tree,
@@ -178,13 +170,22 @@ export default function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route
-            path="/apply/*"
+            path="/apply"
             element={
               <ProtectedRoute>
-                <ApplyPlaceholder />
+                <FormProvider>
+                  <ApplyPage />
+                </FormProvider>
               </ProtectedRoute>
             }
-          />
+          >
+            <Route index element={<Navigate to="step-1" replace />} />
+            <Route path="step-1" element={<Step1Page />} />
+            <Route path="step-2" element={<Step2Page />} />
+            <Route path="step-3" element={<Step3Page />} />
+            <Route path="step-4" element={<Step4Page />} />
+            <Route path="step-5" element={<Step5Page />} />
+          </Route>
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </BrowserRouter>
