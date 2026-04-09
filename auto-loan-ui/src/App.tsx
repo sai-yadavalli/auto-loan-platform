@@ -3,6 +3,7 @@ import { Authenticator } from '@aws-amplify/ui-react'
 import { Car, Shield, Clock, ChevronRight, CheckCircle } from 'lucide-react'
 import { ProtectedRoute } from '@/components/ProtectedRoute'
 import { LoginPage } from '@/pages/LoginPage'
+import SettingsPage from '@/pages/SettingsPage'
 import { FormProvider } from '@/context/FormContext'
 import ApplyPage from '@/pages/ApplyPage'
 import Step1Page from '@/pages/steps/Step1Page'
@@ -169,6 +170,14 @@ export default function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
+          <Route
+            path="/settings"
+            element={
+              <ProtectedRoute>
+                <SettingsPage />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="/apply"
             element={

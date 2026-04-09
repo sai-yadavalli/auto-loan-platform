@@ -24,7 +24,7 @@ React + Vite + TypeScript SPA inside `auto-loan-ui/`. Each stage is one feature 
 |---|--------|-------|--------|
 | 1 | `feature/scaffold` | Vite + TS + Tailwind v4 + all deps, folder structure, landing page | ✅ Merged |
 | 2 | `feature/auth` | Amplify Authenticator, ProtectedRoute, 30-min idle timeout, Navbar | ✅ Merged |
-| 3 | `feature/form-shell` | Multi-step layout, StepProgressIndicator, sessionStorage persistence, FormContext, routing | ⬜ Pending |
+| 3 | `feature/form-shell` | Multi-step layout, StepProgressIndicator, sessionStorage persistence, FormContext, routing | ✅ Merged |
 | 4 | `feature/step1-loan-details` | Loan type, vehicle type, amount ($1k–$250k), term dropdown + Zod validation | ⬜ Pending |
 | 5 | `feature/step2-vehicle-details` | VIN, make/model/year/mileage, purchase price, dealer indicator | ⬜ Pending |
 | 6 | `feature/step3-personal-details` | Name/DOB/SSN (masked), address, employment, income | ⬜ Pending |
