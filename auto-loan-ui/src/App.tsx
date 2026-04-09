@@ -4,6 +4,7 @@ import { Car, Shield, Clock, ChevronRight, CheckCircle } from 'lucide-react'
 import { ProtectedRoute } from '@/components/ProtectedRoute'
 import { Navbar } from '@/components/Navbar'
 import { LoginPage } from '@/pages/LoginPage'
+import SettingsPage from '@/pages/SettingsPage'
 
 function HomePage() {
   return (
@@ -177,6 +178,14 @@ export default function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
+          <Route
+            path="/settings"
+            element={
+              <ProtectedRoute>
+                <SettingsPage />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="/apply/*"
             element={

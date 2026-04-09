@@ -1,4 +1,5 @@
-import { Car, LogOut, User } from 'lucide-react'
+import { useRef, useState, useEffect } from 'react'
+import { Car, LogOut, User, Settings, ChevronDown } from 'lucide-react'
 import { useAuthenticator } from '@aws-amplify/ui-react'
 import { Link } from 'react-router-dom'
 import { cn } from '@/lib/utils'
@@ -10,6 +11,19 @@ interface NavbarProps {
 export function Navbar({ className }: NavbarProps) {
   const { user, signOut } = useAuthenticator()
   const email = user?.signInDetails?.loginId ?? ''
+  const [open, setOpen] = useState(false)
+  const dropdownRef = useRef<HTMLDivElement>(null)
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
 
   return (
     <nav className={cn('border-b border-gray-100 bg-white/90 backdrop-blur-sm sticky top-0 z-50', className)}>
@@ -24,21 +38,45 @@ export function Navbar({ className }: NavbarProps) {
           <span className="font-bold text-gray-900 text-lg tracking-tight">AutoLoan</span>
         </Link>
 
-        <div className="flex items-center gap-4">
-          {email && (
-            <div className="hidden sm:flex items-center gap-2 text-sm text-gray-500">
+        {email && (
+          <div className="relative" ref={dropdownRef}>
+            <button
+              onClick={() => setOpen((v) => !v)}
+              className="flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900 px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors duration-150"
+            >
               <User className="w-4 h-4 shrink-0" />
-              <span className="max-w-[200px] truncate">{email}</span>
-            </div>
-          )}
-          <button
-            onClick={signOut}
-            className="flex items-center gap-1.5 text-sm font-medium text-gray-600 hover:text-red-600 px-3 py-2 rounded-lg hover:bg-red-50 transition-colors duration-150"
-          >
-            <LogOut className="w-4 h-4" />
-            Sign Out
-          </button>
-        </div>
+              <span className="hidden sm:block max-w-[200px] truncate">{email}</span>
+              <ChevronDown className={cn('w-3.5 h-3.5 transition-transform duration-150', open && 'rotate-180')} />
+            </button>
+
+            {open && (
+              <div className="absolute right-0 mt-1 w-52 bg-white rounded-xl shadow-lg border border-gray-100 py-1 z-50">
+                <div className="px-3 py-2 border-b border-gray-100">
+                  <p className="text-xs text-gray-400 truncate">{email}</p>
+                </div>
+
+                <Link
+                  to="/settings"
+                  onClick={() => setOpen(false)}
+                  className="flex items-center gap-2.5 w-full px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-150"
+                >
+                  <Settings className="w-4 h-4 text-gray-400" />
+                  Account Settings
+                </Link>
+
+                <div className="border-t border-gray-100 mt-1 pt-1">
+                  <button
+                    onClick={() => { setOpen(false); signOut() }}
+                    className="flex items-center gap-2.5 w-full px-3 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors duration-150"
+                  >
+                    <LogOut className="w-4 h-4" />
+                    Sign Out
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </nav>
   )
