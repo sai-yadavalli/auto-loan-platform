@@ -39,7 +39,7 @@ function AuthRedirect() {
   const location = useLocation()
   const from =
     (location.state as { from?: { pathname: string } } | null)?.from?.pathname ??
-    '/apply/step-1'
+    '/'
 
   useEffect(() => {
     if (authStatus === 'authenticated') {
