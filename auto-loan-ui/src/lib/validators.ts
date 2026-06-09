@@ -36,6 +36,27 @@ export const vinSchema = z
   .length(17, 'VIN must be exactly 17 characters')
   .regex(/^[A-HJ-NPR-Z0-9]{17}$/i, 'VIN contains invalid characters (I, O, Q not allowed)')
 
+export const vehicleDetailsSchema = z.object({
+  vin: vinSchema,
+  make: z.string().min(1, 'Make is required'),
+  model: z.string().min(1, 'Model is required'),
+  year: z
+    .number({ invalid_type_error: 'Please enter a valid year' })
+    .int('Year must be a whole number')
+    .min(1900, 'Year must be 1900 or later')
+    .max(new Date().getFullYear() + 1, `Year cannot exceed ${new Date().getFullYear() + 1}`),
+  mileage: z
+    .number({ invalid_type_error: 'Please enter mileage' })
+    .int('Mileage must be a whole number')
+    .min(0, 'Mileage cannot be negative'),
+  purchasePrice: z
+    .number({ invalid_type_error: 'Please enter a purchase price' })
+    .positive('Purchase price must be greater than 0'),
+  isDealer: z.boolean(),
+})
+
+export type VehicleDetailsSchema = z.infer<typeof vehicleDetailsSchema>
+
 // ── Step 3: Personal Details ──────────────────────────────────────────────────
 
 // SSN: never stored in localStorage/sessionStorage — validated client-side only
