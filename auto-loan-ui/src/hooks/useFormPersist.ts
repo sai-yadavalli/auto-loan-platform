@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useFormContext, FormData } from '@/context/FormContext';
 
 const STORAGE_KEY = 'auto-loan-form';
+const LAST_STEP_KEY = 'auto-loan-last-step';
 
 // SSN must never be persisted — strip it before saving, restore as empty string
 function sanitize(data: FormData): Omit<FormData, 'personalDetails'> & {
@@ -23,6 +24,22 @@ function loadFromStorage(): Partial<FormData> | null {
   }
 }
 
+export function saveLastStep(step: number) {
+  sessionStorage.setItem(LAST_STEP_KEY, String(step));
+}
+
+export function loadLastStep(): number | null {
+  const raw = sessionStorage.getItem(LAST_STEP_KEY);
+  if (!raw) return null;
+  const n = parseInt(raw, 10);
+  return isNaN(n) ? null : n;
+}
+
+export function clearFormPersistence() {
+  sessionStorage.removeItem(STORAGE_KEY);
+  sessionStorage.removeItem(LAST_STEP_KEY);
+}
+
 export function useFormPersist() {
   const { formData, setLoanDetails, setVehicleDetails, setPersonalDetails } = useFormContext();
 
@@ -40,8 +57,4 @@ export function useFormPersist() {
   useEffect(() => {
     sessionStorage.setItem(STORAGE_KEY, JSON.stringify(sanitize(formData)));
   }, [formData]);
-}
-
-export function clearFormPersistence() {
-  sessionStorage.removeItem(STORAGE_KEY);
 }
