@@ -63,3 +63,33 @@ export type VehicleDetailsSchema = z.infer<typeof vehicleDetailsSchema>
 export const ssnSchema = z
   .string()
   .regex(/^\d{3}-\d{2}-\d{4}$/, 'SSN must be in format XXX-XX-XXXX')
+
+export const personalDetailsSchema = z.object({
+  firstName: z.string().min(1, 'First name is required'),
+  lastName: z.string().min(1, 'Last name is required'),
+  dob: z
+    .string()
+    .min(1, 'Date of birth is required')
+    .refine((val) => {
+      const dob = new Date(val)
+      const today = new Date()
+      let age = today.getFullYear() - dob.getFullYear()
+      const m = today.getMonth() - dob.getMonth()
+      if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) age--
+      return age >= 18
+    }, 'You must be at least 18 years old'),
+  ssn: ssnSchema,
+  address: z.string().min(1, 'Address is required'),
+  city: z.string().min(1, 'City is required'),
+  state: z.string().min(2, 'Please select a state'),
+  zip: z.string().regex(/^\d{5}(-\d{4})?$/, 'Enter a valid ZIP code'),
+  employmentStatus: z.enum(
+    ['employed', 'self-employed', 'unemployed', 'retired', 'student'],
+    { errorMap: () => ({ message: 'Please select an employment status' }) },
+  ),
+  annualIncome: z
+    .number({ invalid_type_error: 'Please enter your annual income' })
+    .positive('Annual income must be greater than 0'),
+})
+
+export type PersonalDetailsSchema = z.infer<typeof personalDetailsSchema>
