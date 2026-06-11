@@ -55,7 +55,7 @@ export default function Step2Page() {
   }
 
   return (
-    <div className="rounded-2xl bg-white shadow-sm border border-gray-100 p-8">
+    <div className="rounded-2xl bg-white shadow-sm border border-gray-100 p-5 sm:p-8">
       <div className="flex items-center gap-3 mb-1">
         <div className="w-8 h-8 bg-primary-50 rounded-lg flex items-center justify-center">
           <Car className="w-4 h-4 text-primary-600" />
@@ -83,15 +83,17 @@ export default function Step2Page() {
                 onChange={(e) => field.onChange(e.target.value.toUpperCase())}
                 onBlur={field.onBlur}
                 placeholder="e.g. 1HGBH41JXMN109186"
+                aria-invalid={!!errors.vin}
+                aria-describedby={errors.vin ? 'vin-error' : undefined}
                 className={`${inputClass} font-mono tracking-widest`}
               />
             )}
           />
-          {errors.vin && <p className="mt-1.5 text-sm text-red-600">{errors.vin.message}</p>}
+          {errors.vin && <p id="vin-error" className="mt-1.5 text-sm text-red-600">{errors.vin.message}</p>}
         </div>
 
         {/* Make / Model */}
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label htmlFor="make" className="block text-sm font-medium text-gray-700 mb-1.5">
               Make <span className="text-red-500">*</span>
@@ -100,10 +102,12 @@ export default function Step2Page() {
               id="make"
               type="text"
               {...register('make')}
+              aria-invalid={!!errors.make}
+              aria-describedby={errors.make ? 'make-error' : undefined}
               placeholder="e.g. Toyota"
               className={inputClass}
             />
-            {errors.make && <p className="mt-1.5 text-sm text-red-600">{errors.make.message}</p>}
+            {errors.make && <p id="make-error" className="mt-1.5 text-sm text-red-600">{errors.make.message}</p>}
           </div>
           <div>
             <label htmlFor="model" className="block text-sm font-medium text-gray-700 mb-1.5">
@@ -113,15 +117,17 @@ export default function Step2Page() {
               id="model"
               type="text"
               {...register('model')}
+              aria-invalid={!!errors.model}
+              aria-describedby={errors.model ? 'model-error' : undefined}
               placeholder="e.g. Camry"
               className={inputClass}
             />
-            {errors.model && <p className="mt-1.5 text-sm text-red-600">{errors.model.message}</p>}
+            {errors.model && <p id="model-error" className="mt-1.5 text-sm text-red-600">{errors.model.message}</p>}
           </div>
         </div>
 
         {/* Year / Mileage */}
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label htmlFor="year" className="block text-sm font-medium text-gray-700 mb-1.5">
               Year <span className="text-red-500">*</span>
@@ -132,10 +138,12 @@ export default function Step2Page() {
               min={1900}
               max={CURRENT_YEAR + 1}
               {...register('year', { valueAsNumber: true })}
+              aria-invalid={!!errors.year}
+              aria-describedby={errors.year ? 'year-error' : undefined}
               placeholder={String(CURRENT_YEAR)}
               className={inputClass}
             />
-            {errors.year && <p className="mt-1.5 text-sm text-red-600">{errors.year.message}</p>}
+            {errors.year && <p id="year-error" className="mt-1.5 text-sm text-red-600">{errors.year.message}</p>}
           </div>
           <div>
             <label htmlFor="mileage" className="block text-sm font-medium text-gray-700 mb-1.5">
@@ -146,10 +154,12 @@ export default function Step2Page() {
               type="number"
               min={0}
               {...register('mileage', { valueAsNumber: true })}
+              aria-invalid={!!errors.mileage}
+              aria-describedby={errors.mileage ? 'mileage-error' : undefined}
               placeholder="e.g. 12000"
               className={inputClass}
             />
-            {errors.mileage && <p className="mt-1.5 text-sm text-red-600">{errors.mileage.message}</p>}
+            {errors.mileage && <p id="mileage-error" className="mt-1.5 text-sm text-red-600">{errors.mileage.message}</p>}
           </div>
         </div>
 
@@ -165,12 +175,14 @@ export default function Step2Page() {
               type="number"
               min={1}
               {...register('purchasePrice', { valueAsNumber: true })}
+              aria-invalid={!!errors.purchasePrice}
+              aria-describedby={errors.purchasePrice ? 'purchasePrice-error' : undefined}
               placeholder="Enter purchase price"
               className={`${inputClass} pl-7`}
             />
           </div>
           {errors.purchasePrice && (
-            <p className="mt-1.5 text-sm text-red-600">{errors.purchasePrice.message}</p>
+            <p id="purchasePrice-error" className="mt-1.5 text-sm text-red-600">{errors.purchasePrice.message}</p>
           )}
         </div>
 
@@ -183,7 +195,7 @@ export default function Step2Page() {
             name="isDealer"
             control={control}
             render={({ field }) => (
-              <div className="flex gap-3">
+              <div className="flex gap-3" role="group" aria-label="Seller type">
                 {([
                   { label: 'Dealership', value: true },
                   { label: 'Private Party', value: false },
@@ -192,6 +204,7 @@ export default function Step2Page() {
                     key={String(opt.value)}
                     type="button"
                     onClick={() => field.onChange(opt.value)}
+                    aria-pressed={field.value === opt.value}
                     className={`px-5 py-2.5 rounded-lg border text-sm font-medium transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-1 ${
                       field.value === opt.value
                         ? 'bg-primary-600 text-white border-primary-600 shadow-sm'
