@@ -225,7 +225,7 @@ export default function Step4Page() {
   }
 
   return (
-    <div className="rounded-2xl bg-white shadow-sm border border-gray-100 p-8">
+    <div className="rounded-2xl bg-white shadow-sm border border-gray-100 p-5 sm:p-8">
       <div className="flex items-center gap-3 mb-1">
         <div className="w-8 h-8 bg-primary-50 rounded-lg flex items-center justify-center">
           <FileText className="w-4 h-4 text-primary-600" />

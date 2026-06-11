@@ -92,7 +92,7 @@ export default function Step5Page() {
 
   if (applicationId) {
     return (
-      <div className="rounded-2xl bg-white shadow-sm border border-gray-100 p-8 text-center">
+      <div className="rounded-2xl bg-white shadow-sm border border-gray-100 p-6 sm:p-8 text-center">
         <div className="w-16 h-16 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-5">
           <CheckCircle2 className="w-8 h-8 text-emerald-600" />
         </div>
@@ -137,7 +137,7 @@ export default function Step5Page() {
   }
 
   return (
-    <div className="rounded-2xl bg-white shadow-sm border border-gray-100 p-8">
+    <div className="rounded-2xl bg-white shadow-sm border border-gray-100 p-5 sm:p-8">
       <div className="flex items-center gap-3 mb-1">
         <div className="w-8 h-8 bg-primary-50 rounded-lg flex items-center justify-center">
           <ClipboardList className="w-4 h-4 text-primary-600" />

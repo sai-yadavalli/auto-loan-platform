@@ -12,20 +12,24 @@ function ToggleGroup<T extends string>({
   value,
   onChange,
   error,
+  errorId,
 }: {
   options: { label: string; value: T }[]
   value: T | ''
   onChange: (v: T) => void
   error?: string
+  errorId?: string
 }) {
   return (
     <div>
-      <div className="flex gap-3 flex-wrap">
+      <div className="flex gap-3 flex-wrap" role="group">
         {options.map((opt) => (
           <button
             key={opt.value}
             type="button"
             onClick={() => onChange(opt.value)}
+            aria-pressed={value === opt.value}
+            aria-describedby={error && errorId ? errorId : undefined}
             className={`px-5 py-2.5 rounded-lg border text-sm font-medium transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-1 ${
               value === opt.value
                 ? 'bg-primary-600 text-white border-primary-600 shadow-sm'
@@ -36,7 +40,7 @@ function ToggleGroup<T extends string>({
           </button>
         ))}
       </div>
-      {error && <p className="mt-1.5 text-sm text-red-600">{error}</p>}
+      {error && errorId && <p id={errorId} className="mt-1.5 text-sm text-red-600">{error}</p>}
     </div>
   )
 }
@@ -64,7 +68,6 @@ export default function Step1Page() {
 
   const amountValue = watch('amount')
 
-  // Keep slider and number input in sync when typing in the input
   useEffect(() => {}, [amountValue])
 
   function onSubmit(data: LoanDetailsSchema) {
@@ -73,7 +76,7 @@ export default function Step1Page() {
   }
 
   return (
-    <div className="rounded-2xl bg-white shadow-sm border border-gray-100 p-8">
+    <div className="rounded-2xl bg-white shadow-sm border border-gray-100 p-5 sm:p-8">
       <h2 className="text-xl font-semibold text-gray-900 mb-1">Loan Details</h2>
       <p className="text-sm text-gray-500 mb-8">Tell us about the loan you're looking for.</p>
 
@@ -95,6 +98,7 @@ export default function Step1Page() {
                 value={field.value ?? ''}
                 onChange={field.onChange}
                 error={errors.loanType?.message}
+                errorId="loanType-error"
               />
             )}
           />
@@ -117,6 +121,7 @@ export default function Step1Page() {
                 value={field.value ?? ''}
                 onChange={field.onChange}
                 error={errors.vehicleType?.message}
+                errorId="vehicleType-error"
               />
             )}
           />
@@ -146,6 +151,7 @@ export default function Step1Page() {
                 max={250000}
                 step={1000}
                 value={field.value ?? 1000}
+                aria-label="Loan amount slider"
                 onChange={(e) => {
                   field.onChange(Number(e.target.value))
                   setValue('amount', Number(e.target.value))
@@ -170,12 +176,14 @@ export default function Step1Page() {
               max={250000}
               step={1000}
               {...register('amount', { valueAsNumber: true })}
+              aria-invalid={!!errors.amount}
+              aria-describedby={errors.amount ? 'amount-error' : undefined}
               placeholder="Enter amount"
               className="w-full pl-7 pr-4 py-2.5 border border-gray-300 rounded-lg text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
             />
           </div>
           {errors.amount && (
-            <p className="mt-1.5 text-sm text-red-600">{errors.amount.message}</p>
+            <p id="amount-error" className="mt-1.5 text-sm text-red-600">{errors.amount.message}</p>
           )}
         </div>
 
@@ -187,6 +195,8 @@ export default function Step1Page() {
           <select
             id="term"
             {...register('term', { valueAsNumber: true })}
+            aria-invalid={!!errors.term}
+            aria-describedby={errors.term ? 'term-error' : undefined}
             className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white"
           >
             <option value="">Select a term</option>
@@ -198,7 +208,7 @@ export default function Step1Page() {
             ))}
           </select>
           {errors.term && (
-            <p className="mt-1.5 text-sm text-red-600">{errors.term.message}</p>
+            <p id="term-error" className="mt-1.5 text-sm text-red-600">{errors.term.message}</p>
           )}
         </div>
 

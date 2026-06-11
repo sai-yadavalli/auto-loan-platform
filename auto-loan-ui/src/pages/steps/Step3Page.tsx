@@ -42,10 +42,12 @@ function SsnInput({
   value,
   onChange,
   onBlur,
+  hasError,
 }: {
   value: string
   onChange: (v: string) => void
   onBlur: () => void
+  hasError?: boolean
 }) {
   const [focused, setFocused] = useState(false)
 
@@ -65,6 +67,8 @@ function SsnInput({
       placeholder="XXX-XX-XXXX"
       autoComplete="off"
       maxLength={11}
+      aria-invalid={hasError}
+      aria-describedby={hasError ? 'ssn-error' : undefined}
       className={inputClass}
     />
   )
@@ -122,7 +126,7 @@ export default function Step3Page() {
   }
 
   return (
-    <div className="rounded-2xl bg-white shadow-sm border border-gray-100 p-8">
+    <div className="rounded-2xl bg-white shadow-sm border border-gray-100 p-5 sm:p-8">
       <div className="flex items-center gap-3 mb-1">
         <div className="w-8 h-8 bg-primary-50 rounded-lg flex items-center justify-center">
           <User className="w-4 h-4 text-primary-600" />
@@ -139,7 +143,7 @@ export default function Step3Page() {
             Personal Information
           </p>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-1.5">
                 First Name <span className="text-red-500">*</span>
@@ -148,11 +152,13 @@ export default function Step3Page() {
                 id="firstName"
                 type="text"
                 {...register('firstName')}
+                aria-invalid={!!errors.firstName}
+                aria-describedby={errors.firstName ? 'firstName-error' : undefined}
                 placeholder="Jane"
                 className={inputClass}
               />
               {errors.firstName && (
-                <p className="mt-1.5 text-sm text-red-600">{errors.firstName.message}</p>
+                <p id="firstName-error" className="mt-1.5 text-sm text-red-600">{errors.firstName.message}</p>
               )}
             </div>
             <div>
@@ -163,16 +169,18 @@ export default function Step3Page() {
                 id="lastName"
                 type="text"
                 {...register('lastName')}
+                aria-invalid={!!errors.lastName}
+                aria-describedby={errors.lastName ? 'lastName-error' : undefined}
                 placeholder="Smith"
                 className={inputClass}
               />
               {errors.lastName && (
-                <p className="mt-1.5 text-sm text-red-600">{errors.lastName.message}</p>
+                <p id="lastName-error" className="mt-1.5 text-sm text-red-600">{errors.lastName.message}</p>
               )}
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label htmlFor="dob" className="block text-sm font-medium text-gray-700 mb-1.5">
                 Date of Birth <span className="text-red-500">*</span>
@@ -182,10 +190,12 @@ export default function Step3Page() {
                 type="date"
                 max={MAX_DOB}
                 {...register('dob')}
+                aria-invalid={!!errors.dob}
+                aria-describedby={errors.dob ? 'dob-error' : undefined}
                 className={inputClass}
               />
               {errors.dob && (
-                <p className="mt-1.5 text-sm text-red-600">{errors.dob.message}</p>
+                <p id="dob-error" className="mt-1.5 text-sm text-red-600">{errors.dob.message}</p>
               )}
             </div>
             <div>
@@ -200,11 +210,12 @@ export default function Step3Page() {
                     value={field.value}
                     onChange={field.onChange}
                     onBlur={field.onBlur}
+                    hasError={!!errors.ssn}
                   />
                 )}
               />
               {errors.ssn && (
-                <p className="mt-1.5 text-sm text-red-600">{errors.ssn.message}</p>
+                <p id="ssn-error" className="mt-1.5 text-sm text-red-600">{errors.ssn.message}</p>
               )}
             </div>
           </div>
@@ -224,15 +235,17 @@ export default function Step3Page() {
               id="address"
               type="text"
               {...register('address')}
+              aria-invalid={!!errors.address}
+              aria-describedby={errors.address ? 'address-error' : undefined}
               placeholder="123 Main St"
               className={inputClass}
             />
             {errors.address && (
-              <p className="mt-1.5 text-sm text-red-600">{errors.address.message}</p>
+              <p id="address-error" className="mt-1.5 text-sm text-red-600">{errors.address.message}</p>
             )}
           </div>
 
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
               <label htmlFor="city" className="block text-sm font-medium text-gray-700 mb-1.5">
                 City <span className="text-red-500">*</span>
@@ -241,11 +254,13 @@ export default function Step3Page() {
                 id="city"
                 type="text"
                 {...register('city')}
+                aria-invalid={!!errors.city}
+                aria-describedby={errors.city ? 'city-error' : undefined}
                 placeholder="Austin"
                 className={inputClass}
               />
               {errors.city && (
-                <p className="mt-1.5 text-sm text-red-600">{errors.city.message}</p>
+                <p id="city-error" className="mt-1.5 text-sm text-red-600">{errors.city.message}</p>
               )}
             </div>
             <div>
@@ -255,6 +270,8 @@ export default function Step3Page() {
               <select
                 id="state"
                 {...register('state')}
+                aria-invalid={!!errors.state}
+                aria-describedby={errors.state ? 'state-error' : undefined}
                 className={`${inputClass} bg-white`}
               >
                 <option value="">Select</option>
@@ -263,7 +280,7 @@ export default function Step3Page() {
                 ))}
               </select>
               {errors.state && (
-                <p className="mt-1.5 text-sm text-red-600">{errors.state.message}</p>
+                <p id="state-error" className="mt-1.5 text-sm text-red-600">{errors.state.message}</p>
               )}
             </div>
             <div>
@@ -275,11 +292,13 @@ export default function Step3Page() {
                 type="text"
                 maxLength={10}
                 {...register('zip')}
+                aria-invalid={!!errors.zip}
+                aria-describedby={errors.zip ? 'zip-error' : undefined}
                 placeholder="78701"
                 className={inputClass}
               />
               {errors.zip && (
-                <p className="mt-1.5 text-sm text-red-600">{errors.zip.message}</p>
+                <p id="zip-error" className="mt-1.5 text-sm text-red-600">{errors.zip.message}</p>
               )}
             </div>
           </div>
@@ -291,7 +310,7 @@ export default function Step3Page() {
             Employment
           </p>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label htmlFor="employmentStatus" className="block text-sm font-medium text-gray-700 mb-1.5">
                 Employment Status <span className="text-red-500">*</span>
@@ -299,6 +318,8 @@ export default function Step3Page() {
               <select
                 id="employmentStatus"
                 {...register('employmentStatus')}
+                aria-invalid={!!errors.employmentStatus}
+                aria-describedby={errors.employmentStatus ? 'employmentStatus-error' : undefined}
                 className={`${inputClass} bg-white`}
               >
                 <option value="">Select status</option>
@@ -309,7 +330,7 @@ export default function Step3Page() {
                 <option value="student">Student</option>
               </select>
               {errors.employmentStatus && (
-                <p className="mt-1.5 text-sm text-red-600">{errors.employmentStatus.message}</p>
+                <p id="employmentStatus-error" className="mt-1.5 text-sm text-red-600">{errors.employmentStatus.message}</p>
               )}
             </div>
             <div>
@@ -325,12 +346,14 @@ export default function Step3Page() {
                   type="number"
                   min={1}
                   {...register('annualIncome', { valueAsNumber: true })}
+                  aria-invalid={!!errors.annualIncome}
+                  aria-describedby={errors.annualIncome ? 'annualIncome-error' : undefined}
                   placeholder="e.g. 75000"
                   className={`${inputClass} pl-7`}
                 />
               </div>
               {errors.annualIncome && (
-                <p className="mt-1.5 text-sm text-red-600">{errors.annualIncome.message}</p>
+                <p id="annualIncome-error" className="mt-1.5 text-sm text-red-600">{errors.annualIncome.message}</p>
               )}
             </div>
           </div>
